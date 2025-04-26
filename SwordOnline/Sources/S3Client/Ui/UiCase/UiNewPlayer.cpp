@@ -290,14 +290,14 @@ void KUiNewPlayer::UpdateProperty()
 		m_Info.Gender = OBJ_G_MALE;
 		SelGender();
 		m_Male.Enable(true);
-		m_Female.Enable(false);	
+		m_Female.Enable(true);	
 	}
 	else if (m_Info.Attribute == series_water)
 	{
 		m_Info.Gender = OBJ_G_FEMALE;
 		SelGender();
 		m_Female.Enable(true);
-		m_Male.Enable(false);
+		m_Male.Enable(true);
 	}
 	else
 	{
