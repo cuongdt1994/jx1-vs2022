@@ -554,22 +554,22 @@ case GDI_GAME_OBJ_DESC:
 				switch (Npc[nIndex].m_Series)
 				{
 					case series_metal:
-						strcpy(pInfo->StatusDesc, "HÖ Kim");
+						strcpy(pInfo->StatusDesc, "H?Kim");
 					break;
 					case series_wood:
-						strcpy(pInfo->StatusDesc, "HÖ Méc");
+						strcpy(pInfo->StatusDesc, "H?Méc");
 					break;
 					case series_water:
-						strcpy(pInfo->StatusDesc, "HÖ Thñy");
+						strcpy(pInfo->StatusDesc, "H?Thñy");
 					break;
 					case series_fire:
-						strcpy(pInfo->StatusDesc, "HÖ Háa");
+						strcpy(pInfo->StatusDesc, "H?Háa");
 					break;
 					case series_earth:
-						strcpy(pInfo->StatusDesc, "HÖ Thæ");
+						strcpy(pInfo->StatusDesc, "H?Th?);
 					break;
 					default:
-						strcpy(pInfo->StatusDesc, "V« HÖ");
+						strcpy(pInfo->StatusDesc, "V?H?);
 					break;
 				}
 			}
@@ -714,19 +714,19 @@ case GDI_GAME_OBJ_DESC:
 			switch(pNpc->m_Series)
 			{
 			case series_water:
-				strcpy(pInfo->StatusDesc, "HÖ Thñy");
+				strcpy(pInfo->StatusDesc, "H?Thñy");
 				break;
 			case series_wood:
-				strcpy(pInfo->StatusDesc, "HÖ Méc");
+				strcpy(pInfo->StatusDesc, "H?Méc");
 				break;
 			case series_metal:
-				strcpy(pInfo->StatusDesc, "HÖ Kim");
+				strcpy(pInfo->StatusDesc, "H?Kim");
 				break;
 			case series_fire:
-				strcpy(pInfo->StatusDesc, "HÖ Háa");
+				strcpy(pInfo->StatusDesc, "H?Háa");
 				break;
 			case series_earth:
-				strcpy(pInfo->StatusDesc, "HÖ Thæ");
+				strcpy(pInfo->StatusDesc, "H?Th?);
 				break;
 			}
 
@@ -2417,7 +2417,73 @@ int	KCoreShell::OperationRequest(unsigned int uOper, unsigned int uParam, int nP
 			Player[CLIENT_PLAYER_INDEX].MoveItem(P1, P2);
 		}
 		break;
+	case GOI_UNEQUIP_ITEM:
+	{
 
+		ItemPos	P1, P2;
+		int PartConvert[itempart_num] =
+		{
+			itempart_head,		itempart_weapon,
+			itempart_amulet,	itempart_cuff,
+			itempart_body,		itempart_belt,
+			itempart_ring1,		itempart_ring2,
+			itempart_pendant,	itempart_foot,
+			itempart_horse,		itempart_mask,
+			itempart_mantle,	itempart_signet,
+			itempart_shipin,	itempart_hoods,
+			itempart_cloak,
+		};
+		int PartCompoundConvert[MAX_COMPOUND_ITEM] =
+		{
+			compound_box1,	compound_box2,
+			compound_box3,
+		};
+		KUiObjAtContRegion* pObject1 = (KUiObjAtContRegion*)uParam;
+		KUiObjAtContRegion* pObject2 = (KUiObjAtContRegion*)nParam;
+
+		// TODO:ÔÝÊ±Ã»ÓÐµÚ¶þ×°±¸
+		if (pObject1->Region.h == 1)
+			break;
+		P1.nPlace = pos_equip;
+		P1.nX = PartConvert[pObject1->Region.v];
+		P1.nY = PartConvert[pObject1->Region.h];
+
+		int nWidth, nHeight;
+
+		nWidth = Item[pObject1->Obj.uId].GetWidth();
+		nHeight = Item[pObject1->Obj.uId].GetHeight();
+		if (!Player[CLIENT_PLAYER_INDEX].m_ItemList.SearchPosition(nWidth, nHeight, &P2))
+		{
+			memcpy(&P2, &P1, sizeof(P1));
+		}
+		//memcpy(&P2, &P1, sizeof(P1));
+
+		//Player[CLIENT_PLAYER_INDEX].MoveItem(P1, P2);
+
+
+		PLAYER_MOVE_ITEM_COMMAND	sMove;
+		sMove.ProtocolType = c2s_playermoveitem;
+		sMove.m_btDownPos = P1.nPlace;
+		sMove.m_btDownX = P1.nX;
+		sMove.m_btDownY = P1.nY;
+		sMove.m_btUpPos = P1.nPlace;
+		sMove.m_btUpX = P1.nX;
+		sMove.m_btUpY = P1.nY;
+		if (g_pClient)
+			g_pClient->SendPackToServer(&sMove, sizeof(PLAYER_MOVE_ITEM_COMMAND));
+
+		PLAYER_MOVE_ITEM_COMMAND	sMove2;
+		sMove2.ProtocolType = c2s_playermoveitem;
+		sMove2.m_btDownPos = P2.nPlace;
+		sMove2.m_btDownX = P2.nX;
+		sMove2.m_btDownY = P2.nY;
+		sMove2.m_btUpPos = P2.nPlace;
+		sMove2.m_btUpX = P2.nX;
+		sMove2.m_btUpY = P2.nY;
+		if (g_pClient)
+			g_pClient->SendPackToServer(&sMove2, sizeof(PLAYER_MOVE_ITEM_COMMAND));
+		break;
+	}
 	//Íæ¼ÒµãÍê¶Ô»°¿ò
 	case GOI_INFORMATION_CONFIRM_NOTIFY:
 	{
